@@ -15,15 +15,17 @@ import com.mcnedward.orrery.view.GameSurface;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Space mSpace;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Space space = new Space();
+        mSpace = new Space();
 
         LinearLayout layout = (LinearLayout) findViewById(R.id.mainLayout);
-        layout.addView(new GameSurface(this, space));
+        layout.addView(new GameSurface(this, mSpace));
     }
 
     @Override
@@ -43,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        }
+        if (id == R.id.action_reset) {
+            mSpace.refresh();
         }
 
         return super.onOptionsItemSelected(item);

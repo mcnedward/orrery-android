@@ -25,4 +25,8 @@ public class Space {
     public void udpatePlanet(Planet planet) {
     }
 
+    public void refresh() {
+        mPlanets = new ArrayList<>();
+    }
+
 }

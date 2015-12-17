@@ -1,12 +1,14 @@
 package com.mcnedward.orrery.model;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.util.Log;
+
+import com.mcnedward.orrery.R;
 
 /**
  * Created by edward on 15/12/15.
@@ -20,26 +22,32 @@ public class Planet extends Figure {
     private String mPlanetName;
     private Paint mPaint;
 
-    public Planet() {
-        this(new Point(0, 0));
+    private boolean draggingLeft, draggingUp;
+
+    public Planet(Context context) {
+        this(new Point(0, 0), context);
     }
 
-    public Planet(Point point) {
+    public Planet(Point point, Context context) {
         super(point);
-        mPaint = new Paint(Color.GREEN);
+        mPaint = new Paint();
+        mPaint.setColor(Color.GREEN);
     }
 
     @Override
     public void updateBounds(Point anchor, Point corner) {
-        int dragX = corner.x, dragY = corner.y;
-        if (dragX < anchor.x && dragX <= anchor.x - PLANET_SIZE)
+        if (corner.x < anchor.x && corner.x <= anchor.x - PLANET_SIZE)
             corner.x = anchor.x - PLANET_SIZE;
-        if (dragX > corner.x && dragX >= anchor.x + PLANET_SIZE)
+        if (corner.x > anchor.x && corner.x >= anchor.x + PLANET_SIZE)
             corner.x = anchor.x + PLANET_SIZE;
-        if (dragY > anchor.y && dragY >= dragY + PLANET_SIZE)
+        if (corner.y > anchor.y && corner.y >= anchor.y + PLANET_SIZE)
             corner.y = anchor.y + PLANET_SIZE;
-        if (dragY < anchor.y && dragY <= anchor.y - PLANET_SIZE)
+        if (corner.y < anchor.y && corner.y <= anchor.y - PLANET_SIZE)
             corner.y = anchor.y - PLANET_SIZE;
+
+        draggingLeft = corner.x < anchor.x;
+        draggingUp = corner.y < anchor.y;
+
         super.updateBounds(anchor, corner);
     }
 
@@ -47,36 +55,56 @@ public class Planet extends Figure {
     public void draw(Canvas canvas) {
         Rect planetBounds = getPlanetBounds();
         Point centerPoint = getCenterPoint();
-        int radius = (planetBounds.width() / 2) > MIN_RADIUS ? (planetBounds.width() / 2) : MIN_RADIUS;
+        int radius = (Math.abs(planetBounds.width()) / 2) > MIN_RADIUS ? (Math.abs(planetBounds.width()) / 2) : MIN_RADIUS;
         canvas.drawCircle(centerPoint.x, centerPoint.y, radius, mPaint);
-//        canvas.drawOval(planetBounds.left, planetBounds.top, planetBounds.right, planetBounds.bottom, mPaint);
-//        canvas.drawRect(planetBounds.left, planetBounds.top, planetBounds.right, planetBounds.bottom, mPaint);
     }
 
     public Rect getPlanetBounds() {
         Rect r = bounds();
 
         if (r.width() > PLANET_SIZE) {
-            int right = r.left + PLANET_SIZE;
-            r.set(r.left, r.top, right, r.bottom);
+            adjustRect(r);
         }
         if (r.height() > PLANET_SIZE) {
-            int bottom = r.top + PLANET_SIZE;
-            r.set(r.left, r.top, r.right, bottom);
+            adjustRect(r);
         }
 
         return r;
     }
 
+    private void adjustRect(Rect r) {
+        int left, top, right, bottom;
+        if (draggingLeft) {
+            left = r.left;
+            right = r.left + PLANET_SIZE;
+        } else {
+            left = r.left - PLANET_SIZE;
+            right = r.left;
+        }
+        if (draggingUp) {
+            top = r.top - PLANET_SIZE;
+            bottom = r.top;
+        } else {
+            top = r.top;
+            bottom = r.top + PLANET_SIZE;
+        }
+        r.set(left, top, right, bottom);
+    }
+
     public Point getCenterPoint() {
         Rect bounds = getPlanetBounds();
-        int anchorX = bounds.left, anchorY = bounds.top;
-        int radius = bounds.width() / 2;
+        int radius = Math.abs(bounds.width()) / 2;
         if (radius < MIN_RADIUS)
             radius = MIN_RADIUS;
-        int cx = anchorX + radius;
-        int cy = anchorY + radius;
-        Log.d(TAG, "CX: " + cx + "; CY: " + cy);
+        int cx, cy;
+        if (draggingLeft)
+            cx = bounds.left - radius;
+        else
+            cx = bounds.left + radius;
+        if (draggingUp)
+            cy = bounds.top - radius;
+        else
+            cy = bounds.top + radius;
         return new Point(cx, cy);
     }
 

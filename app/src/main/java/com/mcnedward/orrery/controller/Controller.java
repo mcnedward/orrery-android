@@ -40,7 +40,7 @@ public class Controller {
             Log.d(TAG, "Touch down...");
             touchDown = false;
             creating = true;
-            creatingPlanet = new Planet(anchor);
+            creatingPlanet = new Planet(anchor, mContext);
             mSpace.addPlanet(creatingPlanet);
         }
         if (creating) {
