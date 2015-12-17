@@ -49,7 +49,7 @@ public class Controller {
                 creatingPlanet = new Planet(anchor, context);
                 space.addPlanet(creatingPlanet);
             } else {
-
+                menu.update(anchor);
             }
         }
         if (creating) {

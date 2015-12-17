@@ -11,6 +11,8 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import com.mcnedward.orrery.model.Space;
+import com.mcnedward.orrery.screen.GameScreen;
+import com.mcnedward.orrery.screen.IScreen;
 import com.mcnedward.orrery.view.GameSurface;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,8 +26,10 @@ public class MainActivity extends AppCompatActivity {
 
         mSpace = new Space();
 
+        IScreen screen = new GameScreen(this);
+
         LinearLayout layout = (LinearLayout) findViewById(R.id.mainLayout);
-        layout.addView(new GameSurface(this, mSpace));
+        layout.addView(new GameSurface(screen, this));
     }
 
     @Override

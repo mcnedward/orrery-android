@@ -3,6 +3,7 @@ package com.mcnedward.orrery.model;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Point;
 import android.graphics.Rect;
 import android.util.Log;
 
@@ -15,13 +16,15 @@ import java.util.List;
 public class Menu {
     private static String TAG = "Menu";
 
-    private static int menuLeft, menuTop, menuRight, menuBottom;
+    private Space space;
 
     private Paint paint;
     private Rect bounds;
     private List<Rect> buttons;
+    private int menuLeft, menuTop, menuRight, menuBottom;
 
-    public Menu() {
+    public Menu(Space space) {
+        this.space = space;
         paint = new Paint();
         bounds = new Rect(0, 0, 0, 0);
         initializeButtons();
@@ -44,9 +47,17 @@ public class Menu {
         }
     }
 
+    public void update(Point touch) {
+        for (Rect button : buttons) {
+            if (button.contains(touch.x, touch.y)) {
+                space.refresh();
+            }
+        }
+    }
+
     public void setSize(int width, int height) {
         menuLeft = 0;
-        menuTop = height - 80;
+        menuTop = height - 100;
         menuRight = width;
         menuBottom = height;
 
@@ -64,6 +75,10 @@ public class Menu {
 
     public Rect getBounds() {
         return bounds;
+    }
+
+    public List<Rect> getButtons() {
+        return buttons;
     }
 
 }

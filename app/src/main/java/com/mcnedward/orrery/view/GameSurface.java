@@ -2,11 +2,15 @@ package com.mcnedward.orrery.view;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 
 import com.mcnedward.orrery.model.Menu;
 import com.mcnedward.orrery.model.Space;
+import com.mcnedward.orrery.screen.GameScreen;
+import com.mcnedward.orrery.screen.IScreen;
 import com.mcnedward.orrery.util.GameThread;
 
 /**
@@ -18,21 +22,23 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public static int WIDTH;
     public static int HEIGHT;
 
-    private Context mContext;
+    private IScreen screen;
+    private Context context;
     private GameThread mGameThread;
 
-    private Menu menu;
-    private Space space;
-
-    public GameSurface(Context context, Space space) {
+    public GameSurface(final IScreen screen, Context context) {
         super(context);
-        mContext = context;
-        this.space = space;
-
-        // TODO Probably put this in Space, or make a World object containing Space and Menu
-        menu = new Menu();
+        this.screen = screen;
+        this.context = context;
 
         getHolder().addCallback(this);
+
+        setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return screen.handleTouch(v, event);
+            }
+        });
 
         WIDTH = getWidth();
         HEIGHT = getHeight();
@@ -41,7 +47,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (mGameThread == null) {
-            mGameThread = new GameThread(this, space, menu, mContext);
+            mGameThread = new GameThread(this, screen, context);
             mGameThread.startGame();
         }
     }
@@ -50,7 +56,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         WIDTH = width;
         HEIGHT = height;
-        menu.setSize(width, height);
+        screen.setSize(width, height);
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.mcnedward.orrery.controller.Controller;
 import com.mcnedward.orrery.model.Menu;
 import com.mcnedward.orrery.model.Space;
 import com.mcnedward.orrery.renderer.Renderer;
+import com.mcnedward.orrery.screen.IScreen;
 import com.mcnedward.orrery.view.GameSurface;
 
 /**
@@ -22,28 +23,17 @@ public class GameThread extends Thread {
     private final static int SLEEP_TIME = 40;
 
     private GameSurface mGameSurface;
+    private IScreen screen;
     private SurfaceHolder mSurfaceHolder;
-
-    private Controller controller;
-    private Renderer renderer;
 
     private boolean running = false;
 
-    public GameThread(GameSurface gameSurface, Space space, Menu menu, Context context) {
+    public GameThread(GameSurface gameSurface, IScreen screen, Context context) {
         super();
         mGameSurface = gameSurface;
+        this.screen = screen;
 
         mSurfaceHolder = gameSurface.getHolder();
-
-        controller = new Controller(space, menu, context);
-        renderer = new Renderer(space, menu);
-
-        mGameSurface.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return controller.handleTouch(v, event);
-            }
-        });
     }
 
     public void startGame() {
@@ -65,8 +55,7 @@ public class GameThread extends Thread {
                 synchronized (mSurfaceHolder) {
                     if (canvas != null) {
                         // Update and render
-                        controller.update();
-                        renderer.render(canvas);
+                        screen.update(canvas);
                     }
                 }
                 sleep(SLEEP_TIME);
