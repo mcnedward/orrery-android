@@ -5,10 +5,9 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
+    <com.mcnedward.orrery.view.GameView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/mainLayout"
-        android:orientation="horizontal">
-    </LinearLayout>
+        android:layout_height="match_parent">
+
+    </com.mcnedward.orrery.view.GameView>
 </RelativeLayout>

@@ -14,22 +14,14 @@ import com.mcnedward.orrery.model.Space;
 import com.mcnedward.orrery.screen.GameScreen;
 import com.mcnedward.orrery.screen.IScreen;
 import com.mcnedward.orrery.view.GameSurface;
+import com.mcnedward.orrery.view.GameView;
 
 public class MainActivity extends AppCompatActivity {
-
-    private Space mSpace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        mSpace = new Space();
-
-        IScreen screen = new GameScreen(this);
-
-        LinearLayout layout = (LinearLayout) findViewById(R.id.mainLayout);
-        layout.addView(new GameSurface(screen, this));
     }
 
     @Override
@@ -49,9 +41,6 @@ public class MainActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
-        }
-        if (id == R.id.action_reset) {
-            mSpace.refresh();
         }
 
         return super.onOptionsItemSelected(item);

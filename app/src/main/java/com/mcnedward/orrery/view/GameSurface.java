@@ -1,11 +1,14 @@
 package com.mcnedward.orrery.view;
 
+import android.app.ActionBar;
 import android.content.Context;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.mcnedward.orrery.model.Menu;
 import com.mcnedward.orrery.model.Space;
@@ -26,10 +29,26 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private Context context;
     private GameThread mGameThread;
 
-    public GameSurface(final IScreen screen, Context context) {
+    public GameSurface(Context context) {
         super(context);
-        this.screen = screen;
+        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+        initialize(context);
+    }
+
+    public GameSurface(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initialize(context);
+    }
+
+    public GameSurface(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        initialize(context);
+    }
+
+    private void initialize(Context context) {
         this.context = context;
+
+        screen = new GameScreen(context);
 
         getHolder().addCallback(this);
 
