@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 
 import com.mcnedward.orrery.controller.Controller;
+import com.mcnedward.orrery.model.Menu;
 import com.mcnedward.orrery.model.Space;
 import com.mcnedward.orrery.renderer.Renderer;
 import com.mcnedward.orrery.view.GameSurface;
@@ -23,21 +24,19 @@ public class GameThread extends Thread {
     private GameSurface mGameSurface;
     private SurfaceHolder mSurfaceHolder;
 
-    private Space mSpace;
     private Controller controller;
     private Renderer renderer;
 
     private boolean running = false;
 
-    public GameThread(GameSurface gameSurface, Space space, Context context) {
+    public GameThread(GameSurface gameSurface, Space space, Menu menu, Context context) {
         super();
         mGameSurface = gameSurface;
-        mSpace = space;
 
         mSurfaceHolder = gameSurface.getHolder();
 
-        controller = new Controller(mSpace, context);
-        renderer = new Renderer(mSpace);
+        controller = new Controller(space, menu, context);
+        renderer = new Renderer(space, menu);
 
         mGameSurface.setOnTouchListener(new View.OnTouchListener() {
             @Override

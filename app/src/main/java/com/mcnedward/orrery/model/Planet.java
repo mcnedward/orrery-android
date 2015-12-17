@@ -6,9 +6,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
-import android.util.Log;
-
-import com.mcnedward.orrery.R;
 
 /**
  * Created by edward on 15/12/15.
@@ -20,7 +17,7 @@ public class Planet extends Figure {
     private static int MIN_RADIUS = 20;
 
     private String mPlanetName;
-    private Paint mPaint;
+    private Paint paint;
 
     private boolean draggingLeft, draggingUp;
 
@@ -30,8 +27,8 @@ public class Planet extends Figure {
 
     public Planet(Point point, Context context) {
         super(point);
-        mPaint = new Paint();
-        mPaint.setColor(Color.GREEN);
+        paint = new Paint();
+        paint.setColor(Color.GREEN);
     }
 
     @Override
@@ -56,7 +53,7 @@ public class Planet extends Figure {
         Rect planetBounds = getPlanetBounds();
         Point centerPoint = getCenterPoint();
         int radius = (Math.abs(planetBounds.width()) / 2) > MIN_RADIUS ? (Math.abs(planetBounds.width()) / 2) : MIN_RADIUS;
-        canvas.drawCircle(centerPoint.x, centerPoint.y, radius, mPaint);
+        canvas.drawCircle(centerPoint.x, centerPoint.y, radius, paint);
     }
 
     public Rect getPlanetBounds() {
@@ -68,6 +65,14 @@ public class Planet extends Figure {
         if (r.height() > PLANET_SIZE) {
             adjustRect(r);
         }
+        if (r.width() <= 50)
+            paint.setColor(Color.GREEN);
+        if (r.width() > 50 && r.width() <= 100)
+            paint.setColor(Color.BLUE);
+        if (r.width() > 100 && r.width() <= 150)
+            paint.setColor(Color.YELLOW);
+        if (r.width() > 150 && r.width() <= 200)
+            paint.setColor(Color.RED);
 
         return r;
     }

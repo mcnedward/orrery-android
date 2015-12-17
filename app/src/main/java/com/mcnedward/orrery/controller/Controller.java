@@ -2,10 +2,12 @@ package com.mcnedward.orrery.controller;
 
 import android.content.Context;
 import android.graphics.Point;
+import android.graphics.Rect;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.mcnedward.orrery.model.Menu;
 import com.mcnedward.orrery.model.Planet;
 import com.mcnedward.orrery.model.Space;
 
@@ -15,21 +17,24 @@ import com.mcnedward.orrery.model.Space;
 public class Controller {
     private static String TAG = "Controller";
 
-    private Space mSpace;
-    private Context mContext;
+    private Space space;
+    private Menu menu;
+    private Context context;
 
     private boolean touched;
     private boolean touchDown;
     private boolean touchUp;
+    private boolean touchingSpace;
     private boolean creating;
     private Point anchor;
     private Point corner;
 
     private Planet creatingPlanet;
 
-    public Controller(Space space, Context context) {
-        mSpace = space;
-        mContext = context;
+    public Controller(Space space, Menu menu, Context context) {
+        this.space = space;
+        this.menu = menu;
+        this.context = context;
         touched = false;
         anchor = new Point();
         corner = new Point();
@@ -38,10 +43,14 @@ public class Controller {
     public void update() {
         if (touchDown) {
             Log.d(TAG, "Touch down...");
-            touchDown = false;
-            creating = true;
-            creatingPlanet = new Planet(anchor, mContext);
-            mSpace.addPlanet(creatingPlanet);
+            if (touchingSpace) {
+                touchDown = false;
+                creating = true;
+                creatingPlanet = new Planet(anchor, context);
+                space.addPlanet(creatingPlanet);
+            } else {
+
+            }
         }
         if (creating) {
             creatingPlanet.updateBounds(anchor, corner);
@@ -55,6 +64,10 @@ public class Controller {
     public boolean handleTouch(View view, MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
+
+        Rect menuBounds = menu.getBounds();
+        touchingSpace = y < menuBounds.top;
+
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             touched = false;
             touchDown = true;

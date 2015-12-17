@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
+import com.mcnedward.orrery.model.Menu;
 import com.mcnedward.orrery.model.Space;
 import com.mcnedward.orrery.util.GameThread;
 
@@ -20,12 +21,16 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     private Context mContext;
     private GameThread mGameThread;
 
-    private Space mSpace;
+    private Menu menu;
+    private Space space;
 
     public GameSurface(Context context, Space space) {
         super(context);
         mContext = context;
-        mSpace = space;
+        this.space = space;
+
+        // TODO Probably put this in Space, or make a World object containing Space and Menu
+        menu = new Menu();
 
         getHolder().addCallback(this);
 
@@ -36,7 +41,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (mGameThread == null) {
-            mGameThread = new GameThread(this, mSpace, mContext);
+            mGameThread = new GameThread(this, space, menu, mContext);
             mGameThread.startGame();
         }
     }
@@ -45,6 +50,7 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         WIDTH = width;
         HEIGHT = height;
+        menu.setSize(width, height);
     }
 
     @Override
