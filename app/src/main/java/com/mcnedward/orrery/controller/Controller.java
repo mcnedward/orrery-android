@@ -9,6 +9,7 @@ import android.view.View;
 
 import com.mcnedward.orrery.model.Planet;
 import com.mcnedward.orrery.model.Space;
+import com.mcnedward.orrery.util.SpaceState;
 
 /**
  * Created by edward on 15/12/15.
@@ -37,12 +38,23 @@ public class Controller {
     public void update() {
         if (touchDown) {
             Log.d(TAG, "Touch down...");
-            if (!creating) {
-                creating = true;
-                creatingPlanet = new Planet(anchor, context);
-                space.addPlanet(creatingPlanet);
-            } else {
-                creatingPlanet.updateBounds(anchor, corner);
+            SpaceState state = space.getState();
+            switch (state) {
+                case CREATE:
+                    if (!creating) {
+                        creating = true;
+                        creatingPlanet = new Planet(anchor, context);
+                        space.addPlanet(creatingPlanet);
+                    } else {
+                        creatingPlanet.updateBounds(anchor, corner);
+                    }
+                    break;
+                case RESIZE:
+
+                    break;
+                case DELETE:
+                    space.tryDeletePlanet(anchor);
+                    break;
             }
         }
         if (touchUp) {
@@ -57,9 +69,8 @@ public class Controller {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             touchDown = true;
             touchUp = false;
-            // TODO This is to account for finger size, this should be researched later
-            anchor.x = x - 50;
-            anchor.y = y - 50;
+            anchor.x = x;
+            anchor.y = y;
             corner.x = x;
             corner.y = y;
             return true;

@@ -13,9 +13,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 
 import com.mcnedward.orrery.R;
 import com.mcnedward.orrery.model.Space;
+import com.mcnedward.orrery.util.SpaceState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,14 +45,32 @@ public class OrreryMenuView extends LinearLayout {
     }
 
     private void initializeButtons() {
-        RadioButton btnCreate = (RadioButton) findViewById(R.id.btnCreate);
-        RadioButton btnResize = (RadioButton) findViewById(R.id.btnResize);
-        RadioButton btnDelete = (RadioButton) findViewById(R.id.btnDelete);
-        Button btnClear = (Button) findViewById(R.id.btnClear);
-        setClearButtonAction(btnClear);
+        setButtonOptions();
+        setClearButtonAction();
     }
 
-    private void setClearButtonAction(Button button) {
+    private void setButtonOptions() {
+        RadioGroup radioGroup = (RadioGroup) findViewById(R.id.btnGroup);
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.btnCreate:
+                        space.setState(SpaceState.CREATE);
+                        break;
+                    case R.id.btnResize:
+                        space.setState(SpaceState.RESIZE);
+                        break;
+                    case R.id.btnDelete:
+                        space.setState(SpaceState.DELETE);
+                        break;
+                }
+            }
+        });
+    }
+
+    private void setClearButtonAction() {
+        Button button = (Button) findViewById(R.id.btnClear);
         button.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
