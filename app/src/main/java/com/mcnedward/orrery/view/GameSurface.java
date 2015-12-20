@@ -1,19 +1,16 @@
 package com.mcnedward.orrery.view;
 
-import android.app.ActionBar;
 import android.content.Context;
-import android.util.AttributeSet;
+import android.graphics.Canvas;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.LinearLayout;
 
-import com.mcnedward.orrery.model.Menu;
+import com.mcnedward.orrery.controller.Controller;
 import com.mcnedward.orrery.model.Space;
-import com.mcnedward.orrery.screen.GameScreen;
-import com.mcnedward.orrery.screen.IScreen;
+import com.mcnedward.orrery.renderer.Renderer;
 import com.mcnedward.orrery.util.GameThread;
 
 /**
@@ -25,48 +22,36 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public static int WIDTH;
     public static int HEIGHT;
 
-    private IScreen screen;
-    private Context context;
     private GameThread mGameThread;
 
-    public GameSurface(Context context) {
+    private Controller controller;
+    private Renderer renderer;
+
+    public GameSurface(Space space, Context context) {
         super(context);
-        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-        initialize(context);
-    }
 
-    public GameSurface(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        initialize(context);
-    }
-
-    public GameSurface(Context context, AttributeSet attrs, int defStyle) {
-        super(context, attrs, defStyle);
-        initialize(context);
-    }
-
-    private void initialize(Context context) {
-        this.context = context;
-
-        screen = new GameScreen(context);
+        controller = new Controller(space, context);
+        renderer = new Renderer(space);
 
         getHolder().addCallback(this);
 
         setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                return screen.handleTouch(v, event);
+                return controller.handleTouch(v, event);
             }
         });
+    }
 
-        WIDTH = getWidth();
-        HEIGHT = getHeight();
+    public void render(Canvas canvas) {
+        controller.update();
+        renderer.render(canvas);
     }
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (mGameThread == null) {
-            mGameThread = new GameThread(this, screen, context);
+            mGameThread = new GameThread(this);
             mGameThread.startGame();
         }
     }
@@ -75,7 +60,6 @@ public class GameSurface extends SurfaceView implements SurfaceHolder.Callback {
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         WIDTH = width;
         HEIGHT = height;
-        screen.setSize(width, height);
     }
 
     @Override

@@ -15,6 +15,8 @@ public interface IFigure {
 
     void updateBounds(Point anchor, Point corner);
 
+    void updateBounds(int left, int top, int right, int bottom);
+
     Rect bounds();
 
     void draw(Canvas canvas);

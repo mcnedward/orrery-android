@@ -26,7 +26,7 @@ public class Planet extends Figure {
     }
 
     public Planet(Point point, Context context) {
-        super(point);
+        super(point, new Point(point.x + MIN_RADIUS, point.y + MIN_RADIUS));
         paint = new Paint();
         paint.setColor(Color.GREEN);
     }

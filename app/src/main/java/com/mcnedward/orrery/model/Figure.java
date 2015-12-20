@@ -14,13 +14,26 @@ public abstract class Figure implements IFigure {
         this(new Point(0, 0));
     }
 
+    public Figure(Rect bounds) {
+        this.bounds = bounds;
+    }
+
     public Figure(Point origin) {
         createBounds(origin);
+    }
+
+    public Figure(Point origin, Point corner) {
+        createBounds(origin, corner);
     }
 
     @Override
     public void updateBounds(Point anchor, Point corner) {
         bounds = new Rect(anchor.x, anchor.y, corner.x, corner.y);
+    }
+
+    @Override
+    public void updateBounds(int left, int top, int right, int bottom) {
+        bounds.set(left, top, right, bottom);
     }
 
     @Override
@@ -36,7 +49,6 @@ public abstract class Figure implements IFigure {
     @Override
     public Rect bounds() {
         return bounds;
-//        return new Rect(bounds.left, bounds.top, bounds.right, bounds.bottom);
     }
 
 }

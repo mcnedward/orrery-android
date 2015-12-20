@@ -4,17 +4,8 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
-
-import com.mcnedward.orrery.model.Space;
-import com.mcnedward.orrery.screen.GameScreen;
-import com.mcnedward.orrery.screen.IScreen;
-import com.mcnedward.orrery.view.GameSurface;
-import com.mcnedward.orrery.view.GameView;
 
 public class MainActivity extends AppCompatActivity {
 

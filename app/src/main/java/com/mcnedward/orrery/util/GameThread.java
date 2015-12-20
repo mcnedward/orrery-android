@@ -1,17 +1,9 @@
 package com.mcnedward.orrery.util;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
-import android.view.View;
 
-import com.mcnedward.orrery.controller.Controller;
-import com.mcnedward.orrery.model.Menu;
-import com.mcnedward.orrery.model.Space;
-import com.mcnedward.orrery.renderer.Renderer;
-import com.mcnedward.orrery.screen.IScreen;
 import com.mcnedward.orrery.view.GameSurface;
 
 /**
@@ -22,18 +14,14 @@ public class GameThread extends Thread {
 
     private final static int SLEEP_TIME = 40;
 
-    private GameSurface mGameSurface;
-    private IScreen screen;
-    private SurfaceHolder mSurfaceHolder;
-
+    private GameSurface gameSurface;
+    private SurfaceHolder surfaceHolder;
     private boolean running = false;
 
-    public GameThread(GameSurface gameSurface, IScreen screen, Context context) {
+    public GameThread(GameSurface gameSurface) {
         super();
-        mGameSurface = gameSurface;
-        this.screen = screen;
-
-        mSurfaceHolder = gameSurface.getHolder();
+        this.gameSurface = gameSurface;
+        surfaceHolder = gameSurface.getHolder();
     }
 
     public void startGame() {
@@ -51,11 +39,11 @@ public class GameThread extends Thread {
         while (running) {
             canvas = null;
             try {
-                canvas = mSurfaceHolder.lockCanvas();
-                synchronized (mSurfaceHolder) {
+                canvas = surfaceHolder.lockCanvas();
+                synchronized (surfaceHolder) {
                     if (canvas != null) {
                         // Update and render
-                        screen.update(canvas);
+                        gameSurface.render(canvas);
                     }
                 }
                 sleep(SLEEP_TIME);
@@ -63,7 +51,7 @@ public class GameThread extends Thread {
                 Log.e(TAG, "Interruption!\n" + e.getMessage());
             } finally {
                 if (canvas != null) {
-                    mSurfaceHolder.unlockCanvasAndPost(canvas);
+                    surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             }
         }

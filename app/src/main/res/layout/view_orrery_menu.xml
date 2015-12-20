@@ -6,35 +6,35 @@
     android:background="#a62b2ba0">
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnCreate"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/create_planet"
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/btnResize"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:text=""
+        android:text="@string/resize_planet"
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/btnDelete"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/delete_planet"
         android:layout_weight="1" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/btnClear"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text=""
+        android:text="@string/clear_planets"
         android:layout_weight="1" />
 </LinearLayout>

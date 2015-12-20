@@ -1,56 +1,55 @@
 package com.mcnedward.orrery.view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.mcnedward.orrery.R;
+import com.mcnedward.orrery.model.Space;
 
 /**
  * Created by edward on 17/12/15.
  */
 public class OrreryMenuView extends LinearLayout {
-    public OrreryMenuView(Context context) {
+
+    private Space space;
+    private Context context;
+    private View thisView;
+
+    public OrreryMenuView(Space space, Context context) {
         super(context);
+        this.space = space;
+        this.context = context;
+
         setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT));
-
         setOrientation(LinearLayout.HORIZONTAL);
         setGravity(Gravity.CENTER_VERTICAL);
-
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_orrery_menu, this, true);
+        thisView = inflater.inflate(R.layout.view_orrery_menu, this, true);
+
+        setButtonActions();
     }
 
-    public OrreryMenuView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        setOrientation(LinearLayout.HORIZONTAL);
-        setGravity(Gravity.CENTER_VERTICAL);
-
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        inflater.inflate(R.layout.view_orrery_menu, this, true);
+    private void setButtonActions() {
+        setClearButtonAction();
     }
 
-    public OrreryMenuView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+    private void setClearButtonAction() {
+        Button button = (Button) thisView.findViewById(R.id.btnClear);
+        button.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                space.refresh();
+                return false;
+            }
+        });
     }
 
-    public OrreryMenuView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    private void create(Context context) {
-        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        for (int x = 0; x < 4; x++) {
-            Button button = new Button(context);
-            button.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f));
-            button.setGravity(Gravity.CENTER_HORIZONTAL);
-
-        }
-    }
 }

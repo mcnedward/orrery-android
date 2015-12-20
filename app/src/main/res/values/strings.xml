@@ -2,4 +2,8 @@
     <string name="app_name">Orrery</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Refresh</string>
+    <string name="create_planet">CREATE</string>
+    <string name="resize_planet">RESIZE</string>
+    <string name="delete_planet">DELETE</string>
+    <string name="clear_planets">CLEAR</string>
 </resources>

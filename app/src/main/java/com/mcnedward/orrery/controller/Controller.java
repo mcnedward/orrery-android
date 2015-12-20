@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.mcnedward.orrery.model.Menu;
 import com.mcnedward.orrery.model.Planet;
 import com.mcnedward.orrery.model.Space;
 
@@ -18,12 +17,9 @@ public class Controller {
     private static String TAG = "Controller";
 
     private Space space;
-    private Menu menu;
     private Context context;
 
-    private boolean touched;
-    private boolean touchDown;
-    private boolean touchUp;
+    private boolean touchDown, touchUp;
     private boolean touchingSpace;
     private boolean creating;
     private Point anchor;
@@ -31,11 +27,9 @@ public class Controller {
 
     private Planet creatingPlanet;
 
-    public Controller(Space space, Menu menu, Context context) {
+    public Controller(Space space, Context context) {
         this.space = space;
-        this.menu = menu;
         this.context = context;
-        touched = false;
         anchor = new Point();
         corner = new Point();
     }
@@ -43,36 +37,29 @@ public class Controller {
     public void update() {
         if (touchDown) {
             Log.d(TAG, "Touch down...");
-            if (touchingSpace) {
-                touchDown = false;
+            if (!creating) {
                 creating = true;
                 creatingPlanet = new Planet(anchor, context);
                 space.addPlanet(creatingPlanet);
             } else {
-                menu.update(anchor);
+                creatingPlanet.updateBounds(anchor, corner);
             }
         }
-        if (creating) {
-            creatingPlanet.updateBounds(anchor, corner);
+        if (touchUp) {
+            creating = false;
         }
-//        if (touched) {
-//            Planet planet = new Planet(touchPosition);
-//            mSpace.addPlanet(planet);
-//        }
     }
 
     public boolean handleTouch(View view, MotionEvent event) {
         int x = (int) event.getX();
         int y = (int) event.getY();
 
-        Rect menuBounds = menu.getBounds();
-        touchingSpace = y < menuBounds.top;
-
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            touched = false;
             touchDown = true;
-            anchor.x = x;
-            anchor.y = y;
+            touchUp = false;
+            // TODO This is to account for finger size, this should be researched later
+            anchor.x = x - 50;
+            anchor.y = y - 50;
             corner.x = x;
             corner.y = y;
             return true;
@@ -85,8 +72,8 @@ public class Controller {
         if (event.getAction() == MotionEvent.ACTION_UP) {
             corner.x = x;
             corner.y = y;
-            touched = true;
-            creating = false;
+            touchDown = false;
+            touchUp = true;
             return true;
         }
         return false;
